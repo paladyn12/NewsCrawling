@@ -54,7 +54,6 @@ public class NewsCrawlerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public List<News> crawlChart() {
