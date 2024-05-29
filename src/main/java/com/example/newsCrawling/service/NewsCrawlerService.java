@@ -48,7 +48,6 @@ public class NewsCrawlerService {
                 newsRepository.save(news);
 
                 log.info(String.valueOf(news));
-
             }
 
         } catch (IOException e) {
