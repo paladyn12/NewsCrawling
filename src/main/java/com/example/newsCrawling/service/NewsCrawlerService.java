@@ -54,7 +54,6 @@ public class NewsCrawlerService {
             e.printStackTrace();
         }
     }
-
     public List<News> crawlChart() {
         List<News> newsList = new ArrayList<>();
         String url = "https://www.melon.com/chart/index.htm";
