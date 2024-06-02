@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Crawler</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">K-POP_Buzz</h1>
+    <div id="newsContainer" class="row">
+        <div th:each="news : ${newsPage.content}" class="col-md-4 mb-4">
+            <div class="card h-100" th:attr="data-link=${news.link}">
+                <img th:src="${news.imageLink}" class="card-img-top" alt="News Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${news.title}"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pagination">
+        <ul class="pagination">
+            <li th:classappend="${newsPage.hasPrevious()} ? '' : 'disabled'">
+                <a th:href="@{/news(page=${newsPage.number - 1})}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, newsPage.totalPages - 1)}" th:classappend="${i == newsPage.number} ? 'active'">
+                <a th:href="@{/news(page=${i})}" th:text="${i + 1}">1</a>
+            </li>
+            <li th:classappend="${newsPage.hasNext()} ? '' : 'disabled'">
+                <a th:href="@{/news(page=${newsPage.number + 1})}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+
+    // 카드 클릭 이벤트 핸들러
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.card').forEach(function(card) {
+            card.addEventListener('click', function() {
+                var link = card.getAttribute('data-link');
+                window.location.href = link;
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -3,25 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Crawler</title>
+    <title>Home</title>
 </head>
 <body>
-<h1>네이버 뉴스 크롤러</h1>
-<button id="crawlButton">뉴스 크롤링 시작</button>
-<div id="newsContainer">
-    <div th:each="news : ${newsList}">
-        <h3 th:text="${news.title}"></h3>
-        <a th:href="@{${news.link}}" th:text="${news.link}"></a>
-        <img th:src="${news.imageLink}" alt="News Image">
-    </div>
-</div>
-
-<script>
-    // 버튼 클릭 이벤트 핸들러
-    document.getElementById("crawlButton").addEventListener("click", function() {
-        // 페이지를 새로고침하여 /crawl 엔드포인트 호출
-        window.location.href = "/crawl";
-    });
-</script>
+<h1>Welcome to the K-POP_Buzz</h1>
+<p>최근 뉴스:</p>
+<a href="/news" class="btn btn-primary">View News</a>
 </body>
 </html>

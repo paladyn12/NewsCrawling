@@ -8,6 +8,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -33,26 +36,33 @@ public class NewsCrawlerService {
             Elements element = doc.select("div.more_stories_scr article.list");
 
             for (Element newsList : element) {
-                String title = newsList.select("div.title").text();
+                if(!newsRepository.existsByTitle(newsList.select("div.title").text())) {
+                    String title = newsList.select("div.title").text();
 
-                Element aTag = newsList.selectFirst("a");
-                String link = aTag.attr("href");
-                String imgLink = aTag.selectFirst("img.b-lazy").attr("data-src");
+                    Element aTag = newsList.selectFirst("a");
+                    String link = aTag.attr("href");
+                    String imgLink = aTag.selectFirst("img.b-lazy").attr("data-src");
 
-                News news = News.builder()
-                        .title(title)
-                        .link("https://www.allkpop.com" + link)
-                        .imageLink(imgLink)
-                        .build();
+                    News news = News.builder()
+                            .title(title)
+                            .link("https://www.allkpop.com" + link)
+                            .imageLink(imgLink)
+                            .build();
 
-                newsRepository.save(news);
+                    newsRepository.save(news);
 
-                log.info(String.valueOf(news));
+                    log.info(String.valueOf(news));
+                }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Page<News> getNewsPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return newsRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     public List<News> crawlChart() {
