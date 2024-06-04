@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class HomeController {
 
-
     @GetMapping
     public String home() {
         return "home";
