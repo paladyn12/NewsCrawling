@@ -14,9 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -64,46 +61,5 @@ public class NewsCrawlerService {
         Pageable pageable = PageRequest.of(page, size);
         return newsRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
-
-    public List<News> crawlChart() {
-        List<News> newsList = new ArrayList<>();
-        String url = "https://www.melon.com/chart/index.htm";
-
-        try {
-            // 웹 페이지 가져오기
-            Document doc = Jsoup.connect(url).get();
-
-            // 필요한 요소 선택
-            Elements element = doc.select("tbody tr.lst50, tbody tr.lst100");
-
-            List<HashMap<String, Object>> list = new ArrayList<>();
-            for (Element chartList : element) {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("rank", chartList.select("span.rank").html());
-                map.put("imgSrc", chartList.select("a.image_typeAll img").attr("src"));
-                // 이미지 a 태그 href 에서 숫자만 출력 (앨범 번호)
-                Elements albHref = chartList.select("a.image_typeAll");
-                String[] albNumber = albHref.attr("href").split("\\D+");
-                String albNo = "";
-                for (String no : albNumber) {
-                    if (!no.isEmpty()) {
-                        albNo += no;
-                    }
-                }
-                map.put("albNo", albNo);
-                log.info(chartList.select("span.rank").html());
-                log.info(albNo);
-
-                list.add(map);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return newsList;
-    }
-
-
 
 }

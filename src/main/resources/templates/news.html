@@ -13,7 +13,10 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="my-4">K-POP_Buzz</h1>
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h1 class="mb-0">K-POP_Buzz</h1>
+        <a href="/" class="btn btn-primary">Home</a>
+    </div>
     <div id="newsContainer" class="row">
         <div th:each="news : ${newsPage.content}" class="col-md-4 mb-4">
             <div class="card h-100" th:attr="data-link=${news.link}">

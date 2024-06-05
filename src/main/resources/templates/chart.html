@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Melon Chart</title>
+</head>
+<body>
+<h1>Melon Chart</h1>
+<div id="chart">
+    <div th:each="song, iterStat : ${chart}">
+        <img th:src="${song.imgLink}" alt="Album Art" />
+        <div>
+            <span th:text="${iterStat.index + 1}">1</span>.
+            <span th:text="${song.name}">Song Name</span> -
+            <span th:text="${song.singer}">Singer</span>
+            (<span th:text="${song.album}">Album</span>)
+        </div>
+        <button th:data-song-title="${song.name}" th:data-song-singer="${song.singer}" onclick="playVideo(this)">Play</button>
+        <button onclick="stopVideo()">Stop</button>
+    </div>
+</div>
+
+<div id="player"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    var player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '315',
+            width: '560',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // 영상이 준비되면 실행할 코드
+    }
+
+    function onPlayerStateChange(event) {
+        // 영상의 상태 변화를 감지할 때 실행할 코드
+    }
+
+    function playVideo(button) {
+        var title = button.getAttribute('data-song-title');
+        var singer = button.getAttribute('data-song-singer');
+
+        console.log('Playing video:', title, singer);
+
+        fetch('/chart/play', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title: title, singer: singer })
+        })
+            .then(response => response.json())
+            .then(data => {
+                var videoId = data.videoId;
+                console.log('Video ID:', videoId);
+                if (videoId) {
+                    player.loadVideoById(videoId);
+                } else {
+                    alert('Video not found');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function stopVideo() {
+        if (player) {
+            player.stopVideo();
+        }
+    }
+
+</script>
+</body>
+</html>
