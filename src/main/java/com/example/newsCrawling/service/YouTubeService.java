@@ -52,7 +52,6 @@ public class YouTubeService {
         } catch (Exception e) {
             log.error("Failed to search video", e);
         }
-
         return new AsyncResult<>(null);
     }
 }
