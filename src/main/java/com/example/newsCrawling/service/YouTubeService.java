@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 @Slf4j
 public class YouTubeService {
 
-    @Value("AIzaSyBdqA-56eK_oobYScCJ48KOa8KiatBFUYo")
+    @Value("${youtube.api.key}")
     private String apiKey;
     private final String YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 
@@ -46,6 +46,8 @@ public class YouTubeService {
             if (itemsNode.isArray() && !itemsNode.isEmpty()) {
                 JsonNode firstItem = itemsNode.get(0);
                 JsonNode idNode = firstItem.path("id");
+
+                log.info("videoId={}", idNode.path("videoId").asText());
 
                 return new AsyncResult<>(idNode.path("videoId").asText());
             }

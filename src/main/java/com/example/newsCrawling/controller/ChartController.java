@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,15 +32,24 @@ public class ChartController {
 
     @PostMapping("/play")
     @ResponseBody
-    public Map<String, String> playSong(@RequestBody SongDto songDto) throws Exception {
-        String query = songDto.getName() + " " + songDto.getSinger();
-        String videoId = String.valueOf(youTubeService.searchVideo(query));
-
+    public Map<String, String> playSong(@RequestBody SongDto songDto) {
         Map<String, String> response = new HashMap<>();
-        if (videoId != null) {
-            response.put("videoId", videoId);
-        }
+        try {
+            String query = songDto.getName() + " " + songDto.getSinger();
+            Future<String> futureVideoId = youTubeService.searchVideo(query);
+            String videoId = futureVideoId.get();
 
+            log.info("videoId in Controller={}", videoId);
+
+            if (videoId != null) {
+                response.put("videoId", videoId);
+            } else {
+                response.put("error", "Video not found");
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while searching for video", e);
+            response.put("error", "An error occurred");
+        }
         return response;
     }
 }

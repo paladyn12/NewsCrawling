@@ -4,12 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            background-color: #f5f5f5;
+        }
+        #content-container {
+            width: 60%;
+        }
+        #content-container h1 {
+            color: #333;
+        }
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #notice-container {
+            width: 35%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #notice-container h2 {
+            color: #333;
+        }
+        #notice-container p {
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to the K-POP_Buzz</h1>
-<p>최근 뉴스:</p>
-<a href="/news" class="btn btn-primary">View News</a>
-<p>멜론 Top 100</p>
-<a href="/chart" class="btn btn-primary">View Chart</a>
+<div id="content-container">
+    <h1>Welcome to the K-POP_Buzz</h1>
+    <div class="btn-container">
+        <p>최근 뉴스:</p>
+        <a href="/news" class="btn">View News</a>
+        <p>멜론 Top 100</p>
+        <a href="/chart" class="btn">View Chart</a>
+    </div>
+</div>
+<div id="notice-container">
+    <h2>공지사항</h2>
+    <p>최근 K-POP 관련 기사와 실시간 멜론 차트 TOP 100의 음악을 감상할 수 있습니다.</p>
+    <p>음악은 제목 + 가수로 유튜브에 검색하여 나온 최상단 영상이 재생됩니다.</p>
+    <p>음악은 play 버튼을 눌러야 재생됩니다.</p>
+</div>
 </body>
 </html>

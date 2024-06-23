@@ -2,27 +2,115 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Melon Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+        }
+        #chart-container {
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header a {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .header a:hover {
+            background-color: #0056b3;
+        }
+        .song-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .song-container img {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .song-details {
+            flex-grow: 1;
+        }
+        .song-actions {
+            display: flex;
+            align-items: center;
+        }
+        .song-actions button {
+            margin-right: 5px;
+        }
+        #player-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        #player {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<h1>Melon Chart</h1>
-<div id="chart">
-    <div th:each="song, iterStat : ${chart}">
-        <img th:src="${song.imgLink}" alt="Album Art" />
-        <div>
-            <span th:text="${iterStat.index + 1}">1</span>.
-            <span th:text="${song.name}">Song Name</span> -
-            <span th:text="${song.singer}">Singer</span>
-            (<span th:text="${song.album}">Album</span>)
+<div id="chart-container">
+    <div class="header">
+        <h1>Melon Chart</h1>
+        <a href="/" class="btn">Home</a>
+    </div>
+    <div id="chart">
+        <div th:each="song, iterStat : ${chart}" class="song-container">
+            <img th:src="${song.imgLink}" alt="Album Art" />
+            <div class="song-details">
+                <span th:text="${iterStat.index + 1}">1</span>.
+                <span th:text="${song.name}">Song Name</span> -
+                <span th:text="${song.singer}">Singer</span>
+                (<span th:text="${song.album}">Album</span>)
+            </div>
+            <div class="song-actions">
+                <button th:data-song-title="${song.name}" th:data-song-singer="${song.singer}" onclick="playVideo(this)">Play</button>
+            </div>
         </div>
-        <button th:data-song-title="${song.name}" th:data-song-singer="${song.singer}" onclick="playVideo(this)">Play</button>
-        <button onclick="stopVideo()">Stop</button>
     </div>
 </div>
-
-<div id="player"></div>
-
-<script src="https://www.youtube.com/iframe_api"></script>
+<div id="player-container">
+    <div id="player"></div>
+</div>
 <script>
+    var tag = document.createElement('script');
+    tag.src="https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
     var player;
 
     function onYouTubeIframeAPIReady() {
@@ -37,11 +125,15 @@
     }
 
     function onPlayerReady(event) {
-        // 영상이 준비되면 실행할 코드
+        event.target.playVideo();
     }
 
+    var done = false;
     function onPlayerStateChange(event) {
-        // 영상의 상태 변화를 감지할 때 실행할 코드
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
+        }
     }
 
     function playVideo(button) {
@@ -55,7 +147,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ title: title, singer: singer })
+            body: JSON.stringify({ name: title, singer: singer })
         })
             .then(response => response.json())
             .then(data => {
@@ -68,12 +160,6 @@
                 }
             })
             .catch(error => console.error('Error:', error));
-    }
-
-    function stopVideo() {
-        if (player) {
-            player.stopVideo();
-        }
     }
 
 </script>
