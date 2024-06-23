@@ -39,6 +39,7 @@ public class ChartController {
         if (videoId != null) {
             response.put("videoId", videoId);
         }
+
         return response;
     }
 }
